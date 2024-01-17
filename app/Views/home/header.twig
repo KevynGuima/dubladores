@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Painel</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+  <link rel="stylesheet" href="dist/css/ionicons.min.css">
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="dist/css/fonts.google.css">
+  <link rel="stylesheet" href="dist/css/sweetalert2.min.css">
+  <link rel="stylesheet" href="dist/css/select2.min.css">
+  <link rel="stylesheet" href="dist/css/animate.min.css">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" href="dist/img/favicons/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" href="dist/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="dist/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="manifest" href="dist/img/favicons/manifest.json">
+  <link rel="mask-icon" href="dist/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+  <link rel="icon" href="dist/img/favicons/favicon.ico">  
+  <style>
+	.treeview-menu {
+		padding-left: 25px;
+	}
+	.imagem-miniatura {
+		max-width: 150px;
+		position: relative;
+	}
+
+	.imagem-tamanho-real {
+        display: none;
+        position: absolute;
+		max-width: 350px;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+	
+/* Estilização da lista suspensa */
+.select2-container--classic .select2-selection--single,
+.select2-container--classic .select2-selection--multiple {
+    background-color: #fff; /* Cor de fundo da caixa de seleção */
+    border: 1px solid #ccc; /* Borda da caixa de seleção */
+    color: #333; /* Cor do texto na caixa de seleção */
+}
+
+/* Estilização da caixa de pesquisa */
+.select2-container--classic .select2-search--dropdown .select2-search__field {
+    color: #333; /* Cor do texto na caixa de pesquisa */
+}
+
+/* Estilização da lista suspensa */
+.select2-container--classic .select2-results__option {
+    background-color: #fff; /* Cor de fundo de cada opção na lista suspensa */
+    color: #333; /* Cor do texto de cada opção na lista suspensa */
+}
+
+/* Estilização da opção selecionada */
+.select2-container--classic .select2-results__option--highlighted {
+    background-color: #2980b9; /* Azul mais claro para a opção selecionada na lista suspensa */
+    color: #ecf0f1; /* Texto claro para a opção selecionada na lista suspensa */
+    border: 1px solid #2980b9; /* Borda mais escura */
+}
+
+/* Estilização do botão de remoção nas opções selecionadas (múltiplas seleções) */
+.select2-container--classic .select2-selection__choice__remove {
+    color: #999; /* Cor do botão de remoção */
+}
+
+/* Estilização do texto do botão selecionado */
+.select2-container--default .select2-selection__choice__display {
+    color: #333; /* Cor do texto do botão selecionado */
+}
+
+
+  </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+<!-- Site wrapper -->
+<div class="wrapper">
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="#" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">
+		ICON MINI
+	  </span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">Painel</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">      
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">Alexander Pierce</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                <p>Usuario
+                  <small>Member since Nov. 2012</small>
+                </p>
+              </li>
+              <!-- Menu Body -->
+              <li class="user-body">
+                <div class="row">
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Followers</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Sales</a>
+                  </div>
+                  <div class="col-xs-4 text-center">
+                    <a href="#">Friends</a>
+                  </div>
+                </div>
+                <!-- /.row -->
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                </div>
+                <div class="pull-right">
+                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- header FIM =============================================== -->

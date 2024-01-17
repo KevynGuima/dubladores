@@ -1,0 +1,20 @@
+  <div class="control-sidebar-bg"></div>
+</div>
+
+<script src="dist/js/jquery.min.js"></script>
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/jquery.slimscroll.min.js"></script>
+<script src="dist/js/fastclick.js"></script>
+<script src="dist/js/adminlte.min.js"></script>
+<script src="dist/js/jquery.dataTables.min.js"></script>
+<script src="dist/js/dataTables.bootstrap.min.js"></script>
+<script src="dist/js/home.js"></script>
+<script src="dist/js/sweetalert2.all.min.js"></script>
+<script src="dist/js/select2.full.min.js"></script>
+	
+{% if existeArquivo(currentUrl) %}
+<script src="dist/js/{{ currentUrl }}.js"></script>
+{% endif %}
+
+</body>
+</html>

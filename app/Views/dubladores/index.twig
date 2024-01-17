@@ -1,0 +1,93 @@
+{% include 'home/header.twig' %}
+
+{% include 'home/sidebar.twig' %}
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+
+		<button id="btnNovo" type="button" class="btn btn-primary novo">
+			<i class="fa fa-plus"></i>
+			Novo
+		</button>
+
+		<h2>Lista de Dubladores</h2>
+		<table id="tbDubladores" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Sexo</th>
+					<th>Data de Nascimento</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for dublador in dubladores %}
+					<tr  data-info='{{ {"dublador": dublador} | json_encode }}'>
+					{% if dublador.data_falecimento is not null and dublador.data_falecimento is not empty %}
+						<td>{{ dublador.nome }} <img src="dist/img/cruz.png" width="10" data-toggle="tooltip" data-placement="top" title="Faleceu em {{ dublador.data_falecimento is not null ? dublador.data_falecimento|date('d/m/Y') : ''  }}" style="cursor: help;"></td>
+					{% else %}
+						<td>{{ dublador.nome }}</td>
+					{% endif %}	
+						<td>{{ dublador.sexo == 'M' ? 'Masculino' : 'Feminino' }}</td>
+						<td data-nascimento="{{ dublador.data_nascimento }}">{{ dublador.data_nascimento is not null ? dublador.data_nascimento|date('d/m/Y') : ''  }}</td>
+						<td>
+							<button type="button" class="btn btn-success editar" data-id="{{ dublador.id }}">
+								<i class="fa fa-pencil"></i>
+							</button>
+							<button type="button" class="btn btn-danger deletar" data-id="{{ dublador.id }}">
+								<i class="fa fa-trash"></i>
+							</button>							
+						</td>						
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div id="modal" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+			<!-- Conteúdo do modal -->
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Dubladores</h4>
+			  </div>
+			  <div class="modal-body">
+				<form id="form" action="dubladores/salvar" method="post" autocomplete="off">
+					<div class="form-group">
+						<label for="nome">Nome:</label>
+						<input type="text" class="form-control" id="nome" name="nome" required autofocus>
+					</div>
+					<div class="form-group">
+						<label for="email">Sexo:</label>
+						<input type="email" class="form-control" id="email" name="email" required>
+						<input type="email" class="form-control" id="email" name="email" required>
+					</div>
+					
+					<div class="form-group">
+						<label for="dataNascimento">Data de Nascimento:</label>
+						<input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+					</div>
+					<button type="submit" class="btn btn-primary">
+						<i class="fa fa-save"></i>
+						Salvar
+					</button>
+				</form>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+			  </div>
+			</div>
+
+		  </div>
+		</div>
+
+
+	</section>
+    <!-- /.content -->
+  </div>
+  
+ {% include 'home/footer.twig' %}
+ 
