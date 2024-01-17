@@ -48,38 +48,46 @@
 		<div id="modal" class="modal fade" role="dialog">
 		  <div class="modal-dialog">
 
-			<!-- Conteúdo do modal -->
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Dubladores</h4>
-			  </div>
-			  <div class="modal-body">
-				<form id="form" action="dubladores/salvar" method="post" autocomplete="off">
-					<div class="form-group">
-						<label for="nome">Nome:</label>
-						<input type="text" class="form-control" id="nome" name="nome" required autofocus>
+				<!-- Conteúdo do modal -->
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Dubladores</h4>
 					</div>
-					<div class="form-group">
-						<label for="email">Sexo:</label>
-						<input type="email" class="form-control" id="email" name="email" required>
-						<input type="email" class="form-control" id="email" name="email" required>
+					<div class="modal-body">
+					<form id="form" action="dubladores/salvar" method="post" autocomplete="off">
+						<div class="form-group">
+							<label for="nome">Nome:</label>
+							<input type="text" class="form-control" id="nome" name="nome" required autofocus>
+						</div>
+						<div class="form-group">
+							<label for="sexo">Sexo:</label>						
+							<div>
+								<label><input type="radio" name="sexo" id="sexo" value="m" required> Masculino</label>
+							</div>
+							<div>
+								<label><input type="radio" name="sexo" id="sexo" value="f" required> Feminino</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="dataNascimento">Data de Nascimento:</label>
+							<input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+						</div>
+						<div class="form-group">
+							<label for="dataFalecimento">Data de Falecimento:</label>
+							<input type="date" class="form-control" id="dataFalecimento" name="dataFalecimento">
+						</div>
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-save"></i>
+							Salvar
+						</button>
+					</form>
 					</div>
-					
-					<div class="form-group">
-						<label for="dataNascimento">Data de Nascimento:</label>
-						<input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
 					</div>
-					<button type="submit" class="btn btn-primary">
-						<i class="fa fa-save"></i>
-						Salvar
-					</button>
-				</form>
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-			  </div>
-			</div>
+				</div>
+				<!-- FIM Conteúdo do modal -->
 
 		  </div>
 		</div>
@@ -90,4 +98,3 @@
   </div>
   
  {% include 'home/footer.twig' %}
- 

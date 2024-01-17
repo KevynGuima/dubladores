@@ -16,13 +16,13 @@ use Respect\Validation\Exceptions\ValidationException;
 
 class DubladorController
 {
-    private $dubladores;
+	private $dubladores;
 
-    public function __construct(DubladorModel $dubladores)
-    {
-        $this->dubladores = $dubladores;
-    }
-	
+	public function __construct(DubladorModel $dubladores)
+	{
+		$this->dubladores = $dubladores;
+	}
+
 	public function index(Request $request, Response $response)
 	{
 		try {
@@ -31,8 +31,8 @@ class DubladorController
 			$twig = Twig::fromRequest($request);
 			return $twig->render($response, 'dubladores/index.twig', ['dubladores' => $dubladores]);	
 		} catch (Exception $e) {        
-            return $response->getBody()->write($e->getMessage())->withStatus(500);
-        }
+      return $response->getBody()->write($e->getMessage())->withStatus(500);
+    }
 	}
 
 	public function validar(array $data, $modo = 'new') : bool
@@ -67,8 +67,8 @@ class DubladorController
 		return false;
 	}
 
-    public function insert(Request $request, Response $response)
-    {
+	public function insert(Request $request, Response $response)
+	{
 		$data = $request->getParsedBody();
 
 		$this->validar($data);
@@ -85,7 +85,7 @@ class DubladorController
 
 				return $jsonResponse;
 			}
-		}  catch (UniqueConstraintViolationException $e) {
+		} catch (UniqueConstraintViolationException $e) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 			$jsonResponse->getBody()->write(json_encode(['success' => false, 'message' => 'Esse email ja existe']));
 			return $jsonResponse;
@@ -98,10 +98,10 @@ class DubladorController
 			$jsonResponse->getBody()->write(json_encode(['message' => $e->getMessage(), 'success' => false]));
 			return $jsonResponse;
 		}
-    }
+  }
 
-    public function update(Request $request, Response $response)
-    {
+	public function update(Request $request, Response $response)
+	{
 		$data = $request->getParsedBody();
 		$this->validar($data, 'edicao');
 		
@@ -111,12 +111,12 @@ class DubladorController
 		$senha          = $data['senha'];
 		$dataNascimento = $data['dataNascimento'];		
 		
-        if (!$this->usuarios->Find($id)) {
+		if (!$this->usuarios->Find($id)) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			$jsonResponse->getBody()->write(json_encode(['message' => 'Usuário não encontrado', 'success' => false]));
 
 			return $jsonResponse;
-        }
+		}
 		
 		try {
 			if($this->usuarios->Update($data)) {			
@@ -134,21 +134,21 @@ class DubladorController
 			$jsonResponse->getBody()->write(json_encode(['message' => $e->getMessage(), 'success' => false]));
 			return $jsonResponse;
 		}		
-    }
+  }
 
-    public function delete(Request $request, Response $response, $args)
-    {
+	public function delete(Request $request, Response $response, $args)
+	{
 		$id = $args['id'];
 		
-        if (!$this->usuarios->Find($id)) {
+		if (!$this->usuarios->Find($id)) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			$jsonResponse->getBody()->write(json_encode(['message' => 'Usuário não encontrado', 'success' => false]));
 
 			return $jsonResponse;
-        }
+		}
 
 		if($this->usuarios->Delete($id)) {
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(204);
 		}
-    }
+  }
 }
