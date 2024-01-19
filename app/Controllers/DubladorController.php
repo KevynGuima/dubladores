@@ -37,24 +37,19 @@ class DubladorController
 
 	public function validar(array $data, $modo = 'new') : bool
 	{
-		$imagem          = $data['imagem'];
-		$nome            = $data['nome'];
-		$sexo            = $data['sexo'];
-		$dataNascimento  = $data['dataNascimento'];
-		$dataFalecimento = $data['dataFalecimento'];
+		$imagem           = $data['imagem'];
+		$nome             = $data['nome'];
+		$sexo             = $data['sexo'];
+		$data_nascimento  = $data['data_nascimento'];
+		$data_falecimento = $data['data_falecimento'];
 		
 		$nomeValidator  = v::notEmpty()->length(5, 50);
-		$senhaValidator = v::notEmpty()->noWhiteSpace()->length(6, 30);
 		$dataValidator  = v::date('Y-m-d');
 		
 		try {
 			$nomeValidator->assert($nome);
-			$emailValidator->assert($email);
-			if($modo == 'new') {
-				$senhaValidator->assert($senha);
-			}
 			$dataValidator->assert($dataNascimento);
-			
+
 			return true;
 		} catch (ValidationException $e) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -63,7 +58,7 @@ class DubladorController
 		} catch (\Exception $e) {
 			return false;
 		}
-		
+
 		return false;
 	}
 
@@ -72,12 +67,12 @@ class DubladorController
 		$data = $request->getParsedBody();
 
 		$this->validar($data);
-		
-		$nome           = $data['nome'];
-		$email          = $data['email'];
-		$senha          = $data['senha'];
-		$dataNascimento = $data['dataNascimento'];		
-		
+
+		$nome             = $data['nome'];
+		$sexo             = $data['sexo'];
+		$data_nascimento  = $data['data_nascimento'];	
+		$data_falecimento = $data['data_falecimento'];
+
 		try {			
 			if($this->usuarios->Insert($data)) {			
 				$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(201);
@@ -104,20 +99,22 @@ class DubladorController
 	{
 		$data = $request->getParsedBody();
 		$this->validar($data, 'edicao');
-		
-		$id             = $data['id'];
-		$nome           = $data['nome'];
-		$email          = $data['email'];
-		$senha          = $data['senha'];
-		$dataNascimento = $data['dataNascimento'];		
-		
+		print_r($data);
+		exit();
+
+		$id               = $data['id'];
+		$nome             = $data['nome'];
+		$sexo             = $data['sexo'];
+		$data_nascimento  = $data['data_nascimento'];
+		$data_falecimento = $data['data_falecimento'];
+
 		if (!$this->usuarios->Find($id)) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			$jsonResponse->getBody()->write(json_encode(['message' => 'Usuário não encontrado', 'success' => false]));
 
 			return $jsonResponse;
 		}
-		
+
 		try {
 			if($this->usuarios->Update($data)) {			
 				$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(200);

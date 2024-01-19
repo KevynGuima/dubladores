@@ -31,7 +31,7 @@
 						<td>{{ dublador.nome }}</td>
 					{% endif %}	
 						<td>{{ dublador.sexo == 'M' ? 'Masculino' : 'Feminino' }}</td>
-						<td data-nascimento="{{ dublador.data_nascimento }}">{{ dublador.data_nascimento is not null ? dublador.data_nascimento|date('d/m/Y') : ''  }}</td>
+						<td data-nascimento="{{ dublador.data_nascimento }}">{{ dublador.data_nascimento is not null ? dublador.data_nascimento|date('d/m/Y') : '' }}</td>
 						<td>
 							<button type="button" class="btn btn-success editar" data-id="{{ dublador.id }}">
 								<i class="fa fa-pencil"></i>
@@ -39,7 +39,7 @@
 							<button type="button" class="btn btn-danger deletar" data-id="{{ dublador.id }}">
 								<i class="fa fa-trash"></i>
 							</button>							
-						</td>						
+						</td>
 					</tr>
 				{% endfor %}
 			</tbody>
@@ -63,19 +63,19 @@
 						<div class="form-group">
 							<label for="sexo">Sexo:</label>						
 							<div>
-								<label><input type="radio" name="sexo" id="sexo" value="m" required> Masculino</label>
+								<label><input type="radio" name="sexo" id="sexoM" value="M" required> Masculino</label>
 							</div>
 							<div>
-								<label><input type="radio" name="sexo" id="sexo" value="f" required> Feminino</label>
+								<label><input type="radio" name="sexo" id="sexoF" value="F" required> Feminino</label>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="dataNascimento">Data de Nascimento:</label>
-							<input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+							<label for="data_nascimento">Data de Nascimento:</label>
+							<input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
 						</div>
 						<div class="form-group">
-							<label for="dataFalecimento">Data de Falecimento:</label>
-							<input type="date" class="form-control" id="dataFalecimento" name="dataFalecimento">
+							<label for="data_falecimento">Data de Falecimento:</label>
+							<input type="date" class="form-control" id="data_falecimento" name="data_falecimento">
 						</div>
 						<button type="submit" class="btn btn-primary">
 							<i class="fa fa-save"></i>

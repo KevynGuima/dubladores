@@ -1,7 +1,7 @@
 
 function handleClick(event) {
-	const btn            = event.currentTarget;
-	const form           = document.querySelector('#form');
+	const btn  = event.currentTarget;
+	const form = document.querySelector('#form');
 		
 	setTimeout(function() {
 		form.querySelector('input').focus();
@@ -14,27 +14,27 @@ function handleClick(event) {
 	} else if(btn.classList.contains('editar')) {
 		let nomeInput           = document.querySelector('input[name="nome"]');
 		let dataLancamentoInput = document.querySelector('input[name="dataLancamento"]');
-	
+
 		const tr             = btn.closest('tr');
 		const dataInfo       = tr.dataset.info;
 		const info           = JSON.parse(dataInfo);
-		const id             = info.id;		
-		const nome           = info.nome;
-		const generos        = info.generos;
-		const imagem         = info.imagem;	
-		const dataLancamento = info.lancamento;
-	
+		const id             = info.filme.id;
+		const nome           = info.filme.nome;
+		const generos        = info.filme.genero_id;
+		const imagem         = info.filme.imagem;
+		const dataLancamento = info.filme.data_lancamento;
+
 		let idsArray = generos ? generos.split(',').map((id) => {
 			return id.trim();
 		}) : [];
-		
+
 		$('#select2').val(null).trigger('change');
 
 		idsArray.forEach((id) => {
 			$('#select2').find('option[value="' + id + '"]').prop('selected', true);
 		});
 		$('#select2').trigger('change');
-		
+
 		const idInput = document.createElement('input');
 		idInput.type = 'hidden';
 		idInput.name = 'id';
@@ -44,12 +44,12 @@ function handleClick(event) {
 
 		nomeInput.value           = nome;
 		dataLancamentoInput.value = dataLancamento;
-	} else if(btn.classList.contains('deletar')) {
+	} else if (btn.classList.contains('deletar')) {
 		const tr       = btn.closest('tr');
 		const dataInfo = tr.dataset.info;
 		const info     = JSON.parse(dataInfo);
-		const id       = info.id;	
-		
+		const id       = info.filme.id;
+
 		Swal.fire({
 		  title: 'Você tem certeza?',
 		  text: 'Você não poderá reverter essa ação!',
@@ -78,7 +78,7 @@ function handleClick(event) {
 
 						setTimeout(function() {
 							location.reload(true);
-						}, 1100);					
+						}, 1100);
 					} else {
 					  console.error('Erro ao apagar o registro. Código de resposta:', response.status);
 					  response.text().then(text => console.error('Conteúdo da resposta:', text));
@@ -90,7 +90,7 @@ function handleClick(event) {
 			}
 		});
 	}		
-	
+
 	if(btn.classList.contains('novo') || btn.classList.contains('editar')) {
 		$('#modal').modal();
 	}
@@ -169,7 +169,7 @@ const Start = () => {
 		console.error('Erro ao carregar o JSON:', error);
 	});
 }
-
+// Inicio do Script
 document.addEventListener('DOMContentLoaded', () => {
 	Start();
 

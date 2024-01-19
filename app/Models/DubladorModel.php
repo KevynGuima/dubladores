@@ -32,11 +32,12 @@ class DubladorModel
 	
 	public function Insert($data) : bool
 	{	
-		$imagem          = $data['imagem'];
-		$nome            = $data['nome'];
-		$sexo            = $data['sexo'];
-		$dataNascimento  = $data['dataNascimento'];
-		$dataFalecimento = $data['dataFalecimento'];
+		print_r($data);
+		$imagem           = $data['imagem'];
+		$nome             = $data['nome'];
+		$sexo             = $data['sexo'];
+		$data_nascimento  = $data['data_nascimento'];
+		$data_falecimento = $data['data_falecimento'];
 	
 		$queryBuilder = $this->db->createQueryBuilder();
 		$queryBuilder
@@ -51,8 +52,8 @@ class DubladorModel
 			->setParameter(0, $imagem)
 			->setParameter(1, $nome)
 			->setParameter(2, $sexo)
-			->setParameter(3, $dataNascimento)
-			->setParameter(4, $dataFalecimento);
+			->setParameter(3, $data_nascimento)
+			->setParameter(4, $data_falecimento);
 
 		$statement = $queryBuilder->executeStatement();
 		
@@ -65,12 +66,14 @@ class DubladorModel
 	
 	public function Update(array $data) : bool
 	{		
-		$id              = $data['id'];
-		$imagem          = $data['imagem'];
-		$nome            = $data['nome'];
-		$sexo            = $data['sexo'];
-		$dataNascimento  = $data['dataNascimento'];
-		$dataFalecimento = $data['dataFalecimento'];
+		print_r($data);
+		exit();
+		$id               = $data['id'];
+		$imagem           = $data['imagem'];
+		$nome             = $data['nome'];
+		$sexo             = $data['sexo'];
+		$data_nascimento  = $data['data_nascimento'];
+		$data_falecimento = $data['data_falecimento'];
 	
 		$queryBuilder = $this->db->createQueryBuilder();
 		$queryBuilder

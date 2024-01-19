@@ -1,7 +1,7 @@
 
 function handleClick(event) {
-	const btn            = event.currentTarget;
-	const form           = document.querySelector('#form');
+	const btn  = event.currentTarget;
+	const form = document.querySelector('#form');
 		
 	setTimeout(function() {
 		form.querySelector('input').focus();
@@ -12,27 +12,28 @@ function handleClick(event) {
 		form.action = 'dubladores/insert';
 		$('#select2').val(null).trigger('change');
 	} else if(btn.classList.contains('editar')) {
-		//let nomeInput           = document.querySelector('input[name="nome"]');
-		//let dataNascimentoInput = document.querySelector('input[name="dataNascimento"]');
+		let nomeInput         = document.querySelector('input[name="nome"]');
+		let sexoMInput        = document.querySelector('#sexoM');
+		let sexoFInput        = document.querySelector('#sexoF');
+		let imagemInput       = document.querySelector('input[name="imagem"]');
+		let falecimentoInput  = document.querySelector('input[name="data_falecimento"]');
+		let nascimentoInput   = document.querySelector('input[name="data_nascimento"]');
 	
-		const tr             = btn.closest('tr');
-		const dataInfo       = tr.dataset.info;
-		const info           = JSON.parse(dataInfo);
+		const tr       = btn.closest('tr');
+		const dataInfo = tr.dataset.info;
+		const info     = JSON.parse(dataInfo);
 		
 		//var dubladorData = JSON.parse(row.getAttribute('data-info'));
 
 		// Agora você pode acessar as propriedades do dublador
-		console.log("ID: " + info.dublador.id);
-		console.log("Nome: " + info.dublador.nome);
-		console.log("Sexo: " + info.dublador.sexo);
-		console.log("imagem: " + info.dublador.imagem);
+		console.log(info);
 		
-		const id             = info.dublador.id;		
-		//const nome           = info.nome;
-		//const sexo           = info.sexo;
-		//const imagem         = info.imagem;	
-		//const dataLancamento = info.lancamento;
-	
+		const id               = info.dublador.id;
+		const nome             = info.dublador.nome;
+		const sexo             = info.dublador.sexo;
+		const data_nascimento  = info.dublador.data_nascimento;
+		const data_falecimento = info.dublador.data_falecimento;
+
 		//let idsArray = generos ? generos.split(',').map(function(id) {
 			//return id.trim();
 		//}) : [];		
@@ -42,15 +43,24 @@ function handleClick(event) {
 		//});
 		//$('#select2').trigger('change');
 		
-		//const idInput = document.createElement('input');
-		//idInput.type = 'hidden';
-		//idInput.name = 'id';
-		//idInput.value = id;
-		//form.appendChild(idInput);
-		//form.action = 'dubladores/update';
+		const idInput = document.createElement('input');
+		idInput.type = 'hidden';
+		idInput.name = 'id';
+		idInput.value = id;
+		form.appendChild(idInput);
+		form.action = 'dubladores/update';
 
-		//nomeInput.value           = nome;
-		//dataLancamentoInput.value = dataLancamento;
+		nomeInput.value = nome;
+		sexoMInput.checked = false;
+		sexoFInput.checked = false;
+		if(sexo == "M") {
+			sexoMInput.checked = true;
+		} else {
+			sexoFInput.checked = true;
+		}
+		nascimentoInput.value = data_nascimento;
+		falecimentoInput.value = data_falecimento;
+
 	} else if(btn.classList.contains('deletar')) {
 		const tr       = btn.closest('tr');
 		const dataInfo = tr.dataset.info;
@@ -112,7 +122,7 @@ function Submit(event) {
 		method: 'POST',
 		body: formData
 	};
-
+	console.log(this.action);
 	fetch(this.action, requestOptions)
 		.then(response => {
 			if (response.status === 201) {
@@ -136,7 +146,7 @@ function Submit(event) {
 			}			
 
 			setTimeout(function() {
-				location.reload(true);
+				//location.reload(true);
 			}, 1100);
 	}).catch(error => {
 		console.error('Erro na requisição:', error);

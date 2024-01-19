@@ -26,18 +26,18 @@ function handleClick(event) {
 		const temporadas     = info.serie.temporadas;
 
 		console.log(info.serie);
-	
+
 		let idsArray = generos ? generos.split(',').map(function(id) {
 			return id.trim();
 		}) : [];
-		
+
 		$('#select2').val(null).trigger('change');
 
 		idsArray.forEach(function(id) {
 			$('#select2').find('option[value="' + id + '"]').prop('selected', true);
 		});
 		$('#select2').trigger('change');
-		
+
 		const idInput = document.createElement('input');
 		idInput.type = 'hidden';
 		idInput.name = 'id';
@@ -48,12 +48,12 @@ function handleClick(event) {
 		nomeInput.value           = nome;
 		dataLancamentoInput.value = dataLancamento;
 		temporadasInput.value     = temporadas;
-	} else if(btn.classList.contains('deletar')) {
+	} else if (btn.classList.contains('deletar')) {
 		const tr       = btn.closest('tr');
 		const dataInfo = tr.dataset.info;
 		const info     = JSON.parse(dataInfo);
 		const id       = info.serie.id;	
-		
+
 		Swal.fire({
 		  title: 'Você tem certeza?',
 		  text: 'Você não poderá reverter essa ação!',
@@ -82,7 +82,7 @@ function handleClick(event) {
 
 						setTimeout(function() {
 							location.reload(true);
-						}, 1100);					
+						}, 1100);
 					} else {
 					  console.error('Erro ao apagar o registro. Código de resposta:', response.status);
 					  response.text().then(text => console.error('Conteúdo da resposta:', text));
@@ -93,8 +93,8 @@ function handleClick(event) {
 				});
 			}
 		});
-	}		
-	
+	}
+
 	if(btn.classList.contains('novo') || btn.classList.contains('editar')) {
 		$('#modal').modal();
 	}
