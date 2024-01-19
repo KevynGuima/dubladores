@@ -11,7 +11,7 @@ use Symfony\Component\Console\Question\Question;
 
 class Seeder extends Command
 {
-    // Adicione uma propriedade para armazenar o contêiner
+    // Adicione uma propriedade para armazenar o contêiner.
     private ContainerInterface $container;
     private $conn;
     private $logger;
@@ -21,7 +21,7 @@ class Seeder extends Command
     {
         parent::__construct();
         $this->conn   = $container->get('db');
-		$this->logger = $container->get('logger');
+				$this->logger = $container->get('logger');
     }
 
     protected function configure(): void
@@ -144,7 +144,7 @@ class Seeder extends Command
 					->values([
 						'nome' => $queryBuilder->createNamedParameter($filme),
 						'data_lancamento' => $queryBuilder->createNamedParameter((new \DateTime('2023-01-01'))->format('Y-m-d')),
-						'imagem' => $queryBuilder->createNamedParameter("caminho/$filme.png")
+						'imagem' => $queryBuilder->createNamedParameter("caminho/$filme.jpg")
 					]);
 
 				$queryBuilder->execute();
@@ -210,7 +210,7 @@ class Seeder extends Command
 							'nome' => $queryBuilder->createNamedParameter($filme),
 							'data_lancamento' => $queryBuilder->createNamedParameter((new \DateTime('2023-01-01'))->format('Y-m-d')),
 							'temporadas' => rand(1, 10),
-							'imagem' => $queryBuilder->createNamedParameter("caminho/$serie.png")
+							'imagem' => $queryBuilder->createNamedParameter("caminho/$serie.jpg")
 						]);
 
 					$queryBuilder->execute();
@@ -287,7 +287,7 @@ class Seeder extends Command
 						'nome'            => $queryBuilder->createNamedParameter($anime),
 						'data_lancamento' => $queryBuilder->createNamedParameter((new \DateTime('2023-01-01'))->format('Y-m-d')),
 						'temporadas'      => rand(1, 20),
-						'imagem'          => $queryBuilder->createNamedParameter("dist/images/$anime.png")
+						'imagem'          => $queryBuilder->createNamedParameter("$anime.jpg")
 					]);
 
 				$queryBuilder->execute();
@@ -374,7 +374,7 @@ class Seeder extends Command
 					->values([
 						'nome'            => $queryBuilder->createNamedParameter($dublador),
 						'data_nascimento' => $queryBuilder->createNamedParameter((new \DateTime('2023-01-01'))->format('Y-m-d')),						
-						'imagem'          => $queryBuilder->createNamedParameter("dist/images/$dublador.png"),
+						'imagem'          => $queryBuilder->createNamedParameter("$dublador.jpg"),
 						'sexo'            => $queryBuilder->createNamedParameter($sexo)
 					]);
 
@@ -397,7 +397,7 @@ class Seeder extends Command
 							'filme_id' => $queryBuilder->createNamedParameter($filme_id, 'integer'),
 							'interprete' => $queryBuilder->createNamedParameter('desenho', 'string'),
 							'personagem' => $queryBuilder->createNamedParameter('desenho', 'string'),
-							'midia' => $queryBuilder->createNamedParameter("dist/images/audio_$dublador_id.mp3")
+							'midia' => $queryBuilder->createNamedParameter("audio_$dublador_id.mp3")
 						]);
 
 					$result = $queryBuilder->executeQuery();
@@ -422,7 +422,7 @@ class Seeder extends Command
 							'dublador_id' => $queryBuilder->createNamedParameter($dublador_id, 'integer'),							
 							'interprete' => $queryBuilder->createNamedParameter('desenho', 'string'),
 							'personagem' => $queryBuilder->createNamedParameter('desenho', 'string'),
-							'midia' => $queryBuilder->createNamedParameter("dist/images/audio_$dublador_id.mp3")
+							'midia' => $queryBuilder->createNamedParameter("audio_$dublador_id.mp3")
 						]);
 
 					$result = $queryBuilder->executeQuery();
@@ -448,7 +448,7 @@ class Seeder extends Command
 							'serie_id' => $queryBuilder->createNamedParameter($serie_id, 'integer'),
 							'interprete' => $queryBuilder->createNamedParameter('desenho', 'string'),
 							'personagem' => $queryBuilder->createNamedParameter('desenho', 'string'),
-							'midia' => $queryBuilder->createNamedParameter("dist/images/audio_$dublador_id.mp3")
+							'midia' => $queryBuilder->createNamedParameter("audio_$dublador_id.mp3")
 						]);
 
 					$result = $queryBuilder->executeQuery();

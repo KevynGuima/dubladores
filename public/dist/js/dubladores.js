@@ -226,9 +226,10 @@ const Start = () => {
 	});
 }
 
+//o inicio de tudo
 document.addEventListener('DOMContentLoaded', () => {
 	Start();
-	$('[data-toggle="tooltip"]').tooltip()
+	$('[data-toggle="tooltip"]').tooltip();
 	
 	const btnNovo    = document.querySelector('.novo');
 	const btnEditar  = document.querySelectorAll('.editar');

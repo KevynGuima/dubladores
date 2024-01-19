@@ -76,6 +76,33 @@
     color: #333; /* Cor do texto do botão selecionado */
 }
 
+.table-hover > tbody > tr:hover {
+    background-color: #3c8dbc; /* Substitua pela cor desejada */
+}
+
+/* Cor do texto para table-hover */
+.table-hover > tbody > tr:hover > td {
+    color: #fff; /* Substitua pela cor desejada */
+}
+
+/* Cor do texto do link dentro da célula */
+.table-hover > tbody > tr:hover > td a {
+    color: #fff; /* Substitua pela cor desejada para o link */
+}
+
+.table th, .table td {
+    white-space: nowrap; /* Evitar quebras de linha */
+}
+
+/* Defina a largura mínima para a célula específica */
+.table td.minimal-cell {
+    width: 1%; /* Ou um valor em pixels que atenda às suas necessidades */
+}
+
+/* Opcional: Se você deseja que os botões fiquem centralizados na célula */
+.table td.minimal-cell button {
+    margin-left: 5px;    
+}
 
   </style>
 </head>
