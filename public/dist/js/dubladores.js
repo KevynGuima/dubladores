@@ -1,33 +1,75 @@
 
-function handleClick(event) {
+const btnNovoClick = () => {
+	const formulario = document.querySelector('#form');	
+	formulario.reset();
+	formulario.action = 'dubladores/insert';
+	const tituloElement = document.querySelector('#titulo');
+	document.querySelector('#retrato').src = 'dist/images/dubladores/retrato.png';
+
+	if (tituloElement) {
+		tituloElement.textContent = 'Novo';
+	} 
+
+	$('#collapseFalecimento').collapse('hide');
+
+	$('#modal').modal();
+}
+
+const btnEditarClick = (event) => {
 	const btn  = event.currentTarget;
-	const form = document.querySelector('#form');
-		
-	setTimeout(function() {
-		form.querySelector('input').focus();
-	}, 500);
-		
-	if (btn.classList.contains('novo')) {
-		form.reset();
-		form.action = 'dubladores/insert';
-		$('#select2').val(null).trigger('change');
-	} else if(btn.classList.contains('editar')) {
-		let nomeInput         = document.querySelector('input[name="nome"]');
-		let sexoMInput        = document.querySelector('#sexoM');
-		let sexoFInput        = document.querySelector('#sexoF');
-		let imagemInput       = document.querySelector('input[name="imagem"]');
-		let falecimentoInput  = document.querySelector('input[name="data_falecimento"]');
-		let nascimentoInput   = document.querySelector('input[name="data_nascimento"]');
+	const formulario = document.querySelector('#form');	
+	formulario.action = 'dubladores/update';
+	const tituloElement = document.querySelector('#titulo');
+	$('#collapseFalecimento').collapse('hide');
+	document.querySelector('#retrato').src = 'dist/images/dubladores/retrato.png';
+	document.querySelector('#retrato').style.filter = '';
+
+	if (tituloElement) {
+		tituloElement.textContent = 'Editar';
+	} 
 	
-		const tr       = btn.closest('tr');
-		const dataInfo = tr.dataset.info;
-		const info     = JSON.parse(dataInfo);
+	const tr               = btn.closest('tr');
+	const dataInfo         = tr.dataset.info;
+	const info             = JSON.parse(dataInfo);		
+	const id               = info.dublador.id;
+	const nome             = info.dublador.nome;
+	const sexo             = info.dublador.sexo;
+	const imagem           = info.dublador.imagem;
+	const data_nascimento  = info.dublador.data_nascimento;
+	const data_falecimento = info.dublador.data_falecimento;		
+	
+	document.querySelector('input[name="id"]').value = id;
+	document.querySelector('input[name="nome"]').value = nome;
+	document.querySelector('input[name="sexo"][value="' + sexo + '"]').checked = true;
+	document.querySelector('input[name="data_nascimento"]').value = data_nascimento;
+		
+	if(data_falecimento) {
+		document.querySelector('input[name="data_falecimento"]').value = data_falecimento;
+		$('#collapseFalecimento').collapse('show');
+	}
+	
+	if(imagem) {
+		document.querySelector('#retrato').src = 'dist/images/dubladores/' + imagem;
+	
+		if(data_falecimento) {	
+			document.querySelector('#retrato').style.filter = 'grayscale(100%)';
+		}
+	}
+	
+	$('#modal').modal();	
+}
+
+function btnDeletarClick(event) {
+	const btn  = event.currentTarget;
+	
+	$('#select2').val(null).trigger('change');
+
+
 		
 		//var dubladorData = JSON.parse(row.getAttribute('data-info'));
 
 		// Agora você pode acessar as propriedades do dublador
-		console.log(info);
-		
+		console.log(info);		
 		const id               = info.dublador.id;
 		const nome             = info.dublador.nome;
 		const sexo             = info.dublador.sexo;
@@ -43,12 +85,7 @@ function handleClick(event) {
 		//});
 		//$('#select2').trigger('change');
 		
-		const idInput = document.createElement('input');
-		idInput.type = 'hidden';
-		idInput.name = 'id';
-		idInput.value = id;
-		form.appendChild(idInput);
-		form.action = 'dubladores/update';
+
 
 		nomeInput.value = nome;
 		sexoMInput.checked = false;
@@ -61,7 +98,9 @@ function handleClick(event) {
 		nascimentoInput.value = data_nascimento;
 		falecimentoInput.value = data_falecimento;
 
-	} else if(btn.classList.contains('deletar')) {
+$('#modal').modal();
+
+/*
 		const tr       = btn.closest('tr');
 		const dataInfo = tr.dataset.info;
 		const info     = JSON.parse(dataInfo);
@@ -106,11 +145,11 @@ function handleClick(event) {
 				});
 			}
 		});
-	}		
 	
-	if(btn.classList.contains('novo') || btn.classList.contains('editar')) {
-		$('#modal').modal();
-	}
+	*/
+	//if(btn.classList.contains('novo') || btn.classList.contains('editar')) {
+		//$('#modal').modal();
+	//}
 }
 
 function Submit(event) {
@@ -122,7 +161,7 @@ function Submit(event) {
 		method: 'POST',
 		body: formData
 	};
-	console.log(this.action);
+
 	fetch(this.action, requestOptions)
 		.then(response => {
 			if (response.status === 201) {
@@ -189,25 +228,58 @@ const Start = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
 	Start();
+	$('[data-toggle="tooltip"]').tooltip()
+	
+	const btnNovo    = document.querySelector('.novo');
+	const btnEditar  = document.querySelectorAll('.editar');
+	const btnDeletar = document.querySelectorAll('.deletar');	
+	const formulario = document.querySelector('#form');
+	
+	btnNovo.addEventListener('click', btnNovoClick);
 
-	const btnNovo = document.querySelector('.novo');
-	const buttons = document.querySelectorAll('.editar, .deletar');
+	btnEditar.forEach((btn) => {
+		btn.addEventListener('click', btnEditarClick);
+	});
 
-	btnNovo.addEventListener('click', handleClick);
+	btnDeletar.forEach((btn) => {
+		btn.addEventListener('click', btnDeletarClick);
+	});
 
-	buttons.forEach((btn) => {
-		btn.addEventListener('click', handleClick);
+	formulario.addEventListener('submit', Submit);
+
+	$('#modal').on('shown.bs.modal', () => {
+		setTimeout(() => {
+			formulario.querySelector('input').focus();
+		}, 500);
 	});
 
     let cells = document.querySelectorAll('.imagem-cell');
     cells.forEach(function(cell) {
         cell.addEventListener('click', function() {
-            let caminhoImagem = 'dist/images/' + this.getAttribute('data-imagem');
-            document.getElementById('modalImagem').src = caminhoImagem;
+			document.querySelector('#modalImagem').style.filter = '';
+			
+			let falecimentoImg = this.getAttribute('data-falecimento');
+			
+			let caminhoImagem = 'dist/images/dubladores/';
+			
+			if(this.getAttribute('data-imagem')) {
+				caminhoImagem = caminhoImagem + this.getAttribute('data-imagem');
+			} else {
+				caminhoImagem = caminhoImagem + 'retrato.png';
+			}
+
+			document.querySelector('#modalImagem').src = caminhoImagem;
+			if(falecimentoImg) {
+				document.querySelector('#modalImagem').style.filter = 'grayscale(100%)';
+			}
+
+			const modalRetrato = document.querySelector('#modalRetrato');
+
+			if (modalRetrato) {
+				modalRetrato.innerHTML = this.getAttribute('data-nome');
+			}
+	
             $('#imagemModal').modal('show');
         });
     });
-
-	const btnSubmit = document.querySelector('#form');
-	btnSubmit.addEventListener('submit', Submit);
 });
