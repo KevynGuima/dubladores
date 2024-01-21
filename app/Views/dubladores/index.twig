@@ -42,11 +42,11 @@
 					<tr data-info='{{ {"dublador": dublador} | json_encode }}'>
 					{% if dublador.data_falecimento is not null and dublador.data_falecimento is not empty %}
 					
-						<td><a href="#"  class="imagem-cell" data-falecimento="1" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a> <img src="dist/img/cruz.png" width="10" data-toggle="tooltip" data-placement="top" title="Faleceu em {{ dublador.data_falecimento is not null ? dublador.data_falecimento|date('d/m/Y') : ''  }}" style="cursor: help;"></td>
+						<td><a href="javascript:void(0)" class="imagem-cell" data-falecimento="1" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a> <img src="dist/img/cruz.png" width="10" data-toggle="tooltip" data-placement="top" title="Faleceu em {{ dublador.data_falecimento is not null ? dublador.data_falecimento|date('d/m/Y') : ''  }}" style="cursor: help;"></td>
 						
 					{% else %}
 
-						<td><a href="#" class="imagem-cell" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a></td>
+						<td><a href="javascript:void(0)" class="imagem-cell" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a></td>
 							
 					{% endif %}	
 						<td>{{ dublador.sexo == 'M' ? '<i class="fa fa-mars"></i> Masculino' : '<i class="fa fa-venus"></i> Feminino' }}</td>
