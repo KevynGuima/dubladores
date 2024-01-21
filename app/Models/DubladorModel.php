@@ -32,7 +32,6 @@ class DubladorModel
 	
 	public function Insert($data) : bool
 	{	
-		print_r($data);
 		$imagem           = $data['imagem'];
 		$nome             = $data['nome'];
 		$sexo             = $data['sexo'];

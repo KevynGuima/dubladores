@@ -57,7 +57,7 @@ return function (App $app) {
 	
 	$app->group('/dubladores', function ($group) {
 		$group->get('', [DubladorController::class, 'index'])->setName('dubladores');
-		$group->get('/listar', [DubladorController::class, 'listar']);
+		$group->post('/listar', [DubladorController::class, 'listar']);
 		$group->post('/insert', [DubladorController::class, 'insert']);
 		$group->post('/update', [DubladorController::class, 'update']);
 		$group->delete('/delete/{id}', [DubladorController::class, 'delete']);

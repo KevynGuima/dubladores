@@ -42,11 +42,11 @@
 					<tr data-info='{{ {"dublador": dublador} | json_encode }}'>
 					{% if dublador.data_falecimento is not null and dublador.data_falecimento is not empty %}
 					
-						<td class="imagem-cell" data-falecimento="1" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}"><a href="#">{{ dublador.nome }}</a> <img src="dist/img/cruz.png" width="10" data-toggle="tooltip" data-placement="top" title="Faleceu em {{ dublador.data_falecimento is not null ? dublador.data_falecimento|date('d/m/Y') : ''  }}" style="cursor: help;"></td>
+						<td><a href="#"  class="imagem-cell" data-falecimento="1" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a> <img src="dist/img/cruz.png" width="10" data-toggle="tooltip" data-placement="top" title="Faleceu em {{ dublador.data_falecimento is not null ? dublador.data_falecimento|date('d/m/Y') : ''  }}" style="cursor: help;"></td>
 						
 					{% else %}
 
-						<td class="imagem-cell" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}"><a href="#">{{ dublador.nome }}</a></td>
+						<td><a href="#" class="imagem-cell" data-nome="{{ dublador.nome }}" data-imagem="{{ dublador.imagem }}">{{ dublador.nome }}</a></td>
 							
 					{% endif %}	
 						<td>{{ dublador.sexo == 'M' ? '<i class="fa fa-mars"></i> Masculino' : '<i class="fa fa-venus"></i> Feminino' }}</td>
@@ -75,7 +75,7 @@
 					</div>
 					<div class="modal-body">
 					<form id="form" method="post" autocomplete="off">
-					    <input type="hidden" name="id" />
+					    <input type="hidden" id="id" name="id" />
 						<div class="form-group">
 							<label for="nome">Nome:</label>
 							<input type="text" class="form-control" id="nome" name="nome" required autofocus>
@@ -93,7 +93,7 @@
 						</div>
 						<div class="form-group">
 							<label for="data_nascimento">Data de Nascimento:</label>
-							<input type="date" class="form-control" id="data_nascimento" name="data_nascimento" required>
+							<input type="date" class="form-control" id="data_nascimento" name="data_nascimento" defaultValue="" required>
 						</div>
 						<div class="form-group">
 							<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseFalecimento" aria-expanded="false" aria-controls="collapseExample">
@@ -101,7 +101,7 @@
 							</button>
 							<div class="collapse" id="collapseFalecimento">
 							  	<label for="data_falecimento">Data de Falecimento:</label>
-								<input type="date" class="form-control" id="data_falecimento" name="data_falecimento">								  
+								<input type="date" class="form-control" id="data_falecimento" name="data_falecimento" defaultValue="">								  
 							</div>							
 						</div>
 						
