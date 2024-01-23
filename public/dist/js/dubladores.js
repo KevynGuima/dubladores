@@ -4,7 +4,8 @@ const btnNovoClick = () => {
 	// pega o formulário onde está id="form" <form id="form" method="post" (id é # e class é .)
 	const formulario = document.querySelector('#form');//pode usar tbm document.getElementById('form')
 	
-	// resetando o formulario ou seja limpando todos os campos, mas lembrando que esse reset nao funciona em todos os tipos de campos	
+	// resetando o formulario ou seja limpando todos os campos, mas lembrando que esse reset nao funciona em todos os
+	// tipos de campos	
 	formulario.reset();
 	
 	// por exemplo campo file o reset não funciona

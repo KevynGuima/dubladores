@@ -13,6 +13,8 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\ORMException;
 use Doctrine\DBAL\Exception as DBALException;
 use Respect\Validation\Exceptions\ValidationException;
+use Slim\Psr7\UploadedFile;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class AnimeController
 {
@@ -36,42 +38,110 @@ class AnimeController
 			return 	$jsonResponse;
         }
 	}
+	
+	function moveUploadedFile(UploadedFile $uploadedFile, $directory)
+	{
+		$filename = $uploadedFile->getClientFilename();
+		$uploadedFile->moveTo($directory . $filename);
 
-    public function insert($data)
+		return $filename;
+	}
+
+	function salvaranime($nome, $dataLancamento, $nomeImagem)
+	{
+		$stmt = $db->prepare("INSERT INTO animes (nome, data_lancamento, nome_imagem, temporadas) VALUES (:nome, :dataLancamento, :nomeImagem, :temporadas)");
+		$stmt->bindParam(':nome', $nome);
+		$stmt->bindParam(':dataLancamento', $dataLancamento);
+		$stmt->bindParam(':nomeImagem', $nomeImagem);
+		$stmt->bindParam(':temporadas', $temporadas);
+		$stmt->execute();
+
+		$anime_id = $db->lastInsertId();
+
+		return $anime_id;
+	}
+	
+    public function insert(Request $request, Response $response)
     {
-        // Implemente a lógica para inserir um usuário usando $this->entityManager
+        $data          = $request->getParsedBody();		
+        $uploadedFiles = $request->getUploadedFiles();
+        $imagem        = $uploadedFiles['imagem'];		
+        $nome          = $data['nome'];	
+        $nomeImagem = '';
+        if ($imagem->getError() === UPLOAD_ERR_OK) {
+            $nomeImagem     = $imagem->getClientFilename();
+            $info           = pathinfo($nomeImagem);
+            $extensao       = $info['extension'];
+            $imagemTemp     = $imagem->getStream()->getMetadata('uri');
+            $caminhoDestino = 'dist/images/' . $nome .'.'. $extensao;
+
+            $imagem = Image::make($imagemTemp);
+            $imagem->resize(500, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $imagem->save($caminhoDestino);	
+        }
+        
+        $result = $this->animes->Insert($data, $nomeImagem);
+
+        $jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+        $jsonResponse->getBody()->write(json_encode(['success' => true, 'message' => 'Salvo com sucesso!']));
+
+        return $jsonResponse;	
     }
 
-    public function update($id, $data)
+    public function update(Request $request, Response $response)
     {
-        // Implemente a lógica para atualizar um usuário usando $this->entityManager
+	    $data          = $request->getParsedBody();
+        $uploadedFiles = $request->getUploadedFiles();
+        $imagem        = $uploadedFiles['imagem'];
+        
+        $nomeImagem = '';
+        if ($imagem->getError() === UPLOAD_ERR_OK) {
+            $nomeImagemAntiga = $this->animes->pegarNomeImagem($data['id']);
+            if($nomeImagemAntiga) {
+                $caminhoImagem = 'dist/images/'.$nomeImagemAntiga;
+                if (file_exists($caminhoImagem)) {
+                    unlink($caminhoImagem);
+                }
+            }			
+            $nomeImagem = $imagem->getClientFilename();
+            
+            $imagemTemp     = $imagem->getStream()->getMetadata('uri');
+            $info           = pathinfo($nomeImagem);
+            $extensao       = $info['extension'];
+            $caminhoDestino = 'dist/images/' . $nome .'.'. $extensao;
+
+            $imagem = Image::make($imagemTemp);
+            $imagem->resize(500, null, function ($constraint) {
+                $constraint->aspectRatio();
+            });
+            $imagem->save($caminhoDestino);
+        }
+        
+        $data['imagem'] = $nomeImagem;
+        
+        $result = $this->animes->Update($data);
+
+        $jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        $jsonResponse->getBody()->write(json_encode(['success' => true, 'message' => 'Editado com sucesso!']));
+
+        return $jsonResponse;
     }
 
-    public function delete($id)
+    public function delete(Request $request, Response $response, $args)
     {
-        // Implemente a lógica para excluir um usuário usando $this->entityManager
-    }
+        $id = $args['id'];
+        
+        if (!$this->animes->Find($id)) {
+            $jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+            $jsonResponse->getBody()->write(json_encode(['message' => 'anime não encontrado', 'success' => false]));
 
-    public function find($id)
-    {
-        // Implemente a lógica para encontrar um usuário usando $this->entityManager
-    }
-
-    public function findAll()
-    {
-        // Implemente a lógica para obter todos os usuários usando $this->entityManager
-    }	
-
-    public function getUsers(Request $request, Response $response)
-    {
-        // Recupera os usuários do banco de dados
-        $users = $this->db->fetchAll('SELECT * FROM usuarios');
-
-        // Exibe os usuários
-        foreach ($users as $user) {
-            $response->getBody()->write('ID: ' . $user['id'] . ', Nome: ' . $user['nome'] . '<br>');
+            return $jsonResponse;
         }
 
-        return $response;
+        if($this->animes->Delete($id)) {
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(204);
+        }
     }
 }

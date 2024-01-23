@@ -8,32 +8,31 @@ use App\Helpers;
 
 class AnimeModel
 {
-    private $db;
-    private $helper;
+	private $db;
+	private $helper;
 
-    public function __construct(Container $container) 
+	public function __construct(Container $container) 
 	{
-        $this->db     = $container->get('db');
+		$this->db     = $container->get('db');
 		$this->helper = $container->get('Helpers');
-    }	
+  }	
 
-    public function All()
-    {
-		//$queryBuilder = $this->db->createQueryBuilder();
+	public function All()
+	{
 		$sql = "SELECT
-			animes.id, animes.nome,	animes.imagem, animes.data_lancamento,
-			CONCAT(COALESCE(GROUP_CONCAT(generos.genero SEPARATOR ', '), ''), ' ') AS generos,
-			GROUP_CONCAT(generos.id) AS genero_id
-FROM
-    animes
-LEFT JOIN
-    filme_genero ON animes.id = filme_genero.filme_id
-LEFT JOIN
-    generos ON filme_genero.genero_id = generos.id
-GROUP BY
-    animes.id, animes.nome, animes.imagem
-ORDER BY
-    animes.nome ASC;";
+		animes.id, animes.nome,	animes.imagem, animes.temporadas, animes.data_lancamento,
+		CONCAT(COALESCE(GROUP_CONCAT(generos.genero SEPARATOR ', '), ''), ' ') AS generos,
+		GROUP_CONCAT(generos.id) AS genero_id
+		FROM
+			animes
+		LEFT JOIN
+		  anime_genero ON animes.id = anime_genero.anime_id
+		LEFT JOIN
+			generos ON anime_genero.genero_id = generos.id
+		GROUP BY
+			animes.id, animes.nome, animes.imagem
+		ORDER BY
+			animes.nome ASC;";
 
 		$stmt   = $this->db->query($sql);
 		$result = $stmt->fetchAll();
@@ -43,27 +42,27 @@ ORDER BY
 		} else {
 			return [];
 		}
-    }
+	}
 	
     public function Insert(array $data, $nomeImagem) : bool
     {
 		$nome           = $this->helper->MB_CASE_TITLE_BR($data['nome']);
 		$dataLancamento = $data['dataLancamento'];
+		$temporadas     = $data['temporadas'];
 	
-		//$queryBuilder = $this->db->createQueryBuilder();
-		$stmt = $this->db->prepare("INSERT INTO filmes (nome, data_lancamento, imagem) VALUES (:nome, :dataLancamento, :nomeImagem)");
+		$stmt = $this->db->prepare("INSERT INTO animes (nome, data_lancamento, imagem, temporadas) VALUES (:nome, :dataLancamento, :nomeImagem, :temporadas)");
 		$stmt->bindParam(':nome', $nome);
 		$stmt->bindParam(':dataLancamento', $dataLancamento);
 		$stmt->bindParam(':nomeImagem', $nomeImagem);
+		$stmt->bindParam(':temporadas', $temporadas);
 		$result = $stmt->execute();
 
-		// Obtenha o último ID inserido (filme_id)
-		$filme_id = $this->db->lastInsertId();
+		$anime_id = $this->db->lastInsertId();
 		
 		if ($result) {
 			foreach ($data['generos'] as $genero_id) {
-				$stmt = $this->db->prepare("INSERT INTO filme_genero (filme_id, genero_id) VALUES (:filme_id, :genero_id)");
-				$stmt->bindParam(':filme_id', $filme_id);
+				$stmt = $this->db->prepare("INSERT INTO anime_genero (anime_id, genero_id) VALUES (:anime_id, :genero_id)");
+				$stmt->bindParam(':anime_id', $anime_id);
 				$stmt->bindParam(':genero_id', $genero_id);
 				$stmt->execute();
 			}
@@ -78,7 +77,7 @@ ORDER BY
 	{
 		$queryBuilder = $this->db->createQueryBuilder();
 		$imagem = $queryBuilder->select('imagem')
-			->from('filmes')
+			->from('animes')
 			->where('id = :id')
 			->setParameter('id', $id)
 			->execute()
@@ -89,7 +88,7 @@ ORDER BY
 	
     public function Update($data) : bool
     {
-		$filme_id        = $data['id'];
+		$anime_id        = $data['id'];
 		$nome            = $this->helper->MB_CASE_TITLE_BR($data['nome']);
 		$data_lancamento = $data['dataLancamento'];
 		$generos         = $data['generos'];
@@ -98,13 +97,13 @@ ORDER BY
 		$queryBuilder = $this->db->createQueryBuilder();
 
 		$queryBuilder
-		  ->update('filmes', 'f')
-		  ->set('f.nome', ':nome')
-		  ->set('f.data_lancamento', ':data_lancamento')
-		  ->where('f.id = :id')
+		  ->update('animes', 's')
+		  ->set('s.nome', ':nome')
+		  ->set('s.data_lancamento', ':data_lancamento')
+		  ->where('s.id = :id')
 		  ->setParameter('nome', $nome)
 		  ->setParameter('data_lancamento', $data_lancamento)
-		  ->setParameter('id', $filme_id, \PDO::PARAM_INT);
+		  ->setParameter('id', $anime_id, \PDO::PARAM_INT);
 		  
 		if (!empty($imagem)) {
 			$queryBuilder->set('imagem', ':imagem')->setParameter('imagem', $imagem);
@@ -112,16 +111,16 @@ ORDER BY
 		$queryBuilder->execute();		
 
 		$queryBuilder
-			->delete('filme_genero')
-			->where('filme_id = :id')
-			->setParameter('id', $filme_id, \PDO::PARAM_INT)
+			->delete('anime_genero')
+			->where('anime_id = :id')
+			->setParameter('id', $anime_id, \PDO::PARAM_INT)
 			->execute();
 		
 		foreach ($generos as $genero_id) {
 			$queryBuilder
-				->insert('filme_genero')
-				->values(['filme_id' => ':filme_id', 'genero_id' => ':genero_id'])
-				->setParameter('filme_id', $filme_id)
+				->insert('anime_genero')
+				->values(['anime_id' => ':anime_id', 'genero_id' => ':genero_id'])
+				->setParameter('anime_id', $anime_id)
 				->setParameter('genero_id', $genero_id)
 				->execute();		
 		}
@@ -131,22 +130,7 @@ ORDER BY
 	
 	public function Delete($id)
 	{
-		//antes de deletar um filme precisa deletar o relacionamento dele na tabela filme_genero
-		//outra maneira de fazer isso é usar cascade para ser automatico:
-		//ALTER TABLE filme_genero
-		//ADD CONSTRAINT FK_AD803B2FE6E418AD
-		//FOREIGN KEY (filme_id)
-		//REFERENCES filmes(id)
-		//ON DELETE CASCADE;
-
-		$queryBuilder = $this->db->createQueryBuilder();
-		$queryBuilder
-			->delete('filme_genero')
-			->where('filme_id = :id')
-			->setParameter('id', $id, \PDO::PARAM_INT)
-			->execute();
-	
-		$rowCount = $this->db->executeStatement('DELETE FROM filmes WHERE id = ?', [$id]);
+		$rowCount = $this->db->executeStatement('DELETE FROM animes WHERE id = ?', [$id]);
 
 		if ($rowCount > 0) {
 			return true;
@@ -159,13 +143,13 @@ ORDER BY
 	{
 		$queryBuilder = $this->db->createQueryBuilder();
 		$result = $queryBuilder->select('*')
-			->from('filmes')
+			->from('animes')
 			->where('id = :id')
 			->setParameter('id', $id)
 			->execute();
 
-		$filme = $result->fetch();
+		$anime = $result->fetch();
 
-		return $filme;
+		return $anime;
 	}
 }

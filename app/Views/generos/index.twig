@@ -13,7 +13,7 @@
 		</button>
 
 		<h2>Lista de Gêneros</h2>
-		<table class="table table-striped table-bordered" cellspacing="0" width="100%">
+		<table class="table table-striped table-bordered table-hover table-hover-color-red" cellspacing="0" width="100%">
 			<thead>
 				<tr>
 					<th>Gênero</th>
@@ -24,7 +24,7 @@
 				{% for genero in generos %}
 					<tr data-id='{{ genero.id }}' data-info='{{ {"genero": genero} | json_encode }}'>
 						<td>{{ genero.genero }}</td>
-						<td>
+						<td class="minimal-cell" style="background-color:#fff !important;">
 							<button type="button" class="btn btn-success editar">
 								<i class="fa fa-pencil"></i>
 							</button>

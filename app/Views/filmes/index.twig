@@ -29,7 +29,8 @@
 			</div>
 
 			<h2>Lista de Filmes</h2>
-			<table id="tbFilmes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			<table id="tbFilmes" class="table table-striped table-bordered table-hover table-hover-color-red" 
+			cellspacing="0" width="100%">
 				<thead>
 					<tr>
 						<th>Nome</th>
@@ -48,7 +49,7 @@
 							{% endif %}
 							<td>{{ filme.generos }}</td>
 							<td>{{ filme.data_lancamento is not null ? filme.data_lancamento|date('d/m/Y') : ''  }}</td>
-							<td class="text-center" style="width: 10%;">
+							<td class="minimal-cell" style="background-color:#fff !important;">
 								<button type="button" class="btn btn-success editar">
 									<i class="fa fa-pencil"></i>
 								</button>
