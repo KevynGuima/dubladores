@@ -527,7 +527,7 @@ class Seeder extends Command
 			]
 		];
 
-		// Exemplo de uso para imprimir os dados
+		$i = 0;
 		foreach ($nomes as $pessoa) {
 			$senhaCriptografada = password_hash($pessoa['senha'], PASSWORD_BCRYPT);
 			$tokenValidacao     = bin2hex(random_bytes(32));
@@ -549,11 +549,121 @@ class Seeder extends Command
 				
 
 			// Executar a consulta
-			$queryBuilder->execute();	
+			$queryBuilder->execute();
+			$i++;
 		}
 			
-		$output->writeln("<info>Criado 10 usuarios com sucesso!</info>");		
+		$output->writeln("<info>Criado $i usuarios com sucesso!</info>");		
 
+//######### Tabela tarefas #########################################################################################################################				
+		$tarefas = [
+			[
+				'tarefa' => 'Generos - arrumar a mensagem quando se digita apenas 3 caracters (traduzir)',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Generos - na edição está permitindo 3 caracters',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Generos - acentuação na mensagem "esse gênero já existe"',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Generos - não permitir apagar o gênero se ele estiver sendo usado',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Animes - não está funcionando nenhuma ação',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Animes - não permitir animes com o mesmo nome e data de lançamento',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Filmes - não permitir cadastrar nomes de filmes menores que 4 caracters',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Filmes - não está editando a foto',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Filmes - não está salvando a foto na pasta certa',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Filmes - não permitir filmes com o mesmo nome e data de lançamento',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Séries - não permitir séries com o mesmo nome e data de lançamento',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Séries - não está salvando a foto na pasta certa',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Séries - não está editando a foto',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Dubladores - não está salvando',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Dubladores - não está editando',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Dubladores - não está mostrando a foto padrão quando está vazio',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Dubladores - não está excluindo',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Usuarios - arrumar cadastro de usuários e mensagens de erro',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Usuarios - não deixar salvar data de nascimento menor que 15 anos',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Usuarios - senha no minimo com 6 caracters',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Usuarios - arrumar o botão deletar',
+				'concluido' => 'N'
+			],
+			[
+				'tarefa' => 'Usuarios - não permitir apagar usuário logado',
+				'concluido' => 'N'
+			]
+		];
+
+		$i = 0;
+		foreach ($tarefas as $tarefa) {
+			$queryBuilder
+				->insert('tarefas')
+				->values([
+					'tarefa' => ':tarefa',
+					'concluido' => ':concluido'
+				])
+				->setParameter('tarefa', $tarefa['tarefa'])
+				->setParameter('concluido', $tarefa['concluido']);				
+
+			// Executar a consulta
+			$queryBuilder->execute();
+			$i++;
+		}
+			
+		$output->writeln("<info>Criado $i tarefas com sucesso!</info>");
 			
 		} else {
 			$output->writeln('<comment>Nada foi feito.</comment>');

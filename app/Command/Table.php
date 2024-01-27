@@ -483,6 +483,41 @@ class Table extends Command
 			} catch (SchemaException $e) {
 				$output->writeln('<error>Erro ao criar a tabela: ' . $e->getMessage() .'</error>');
 			}			
+		
+
+//######### Tabela tarefas #########################################################################################################################
+			$tableName = 'tarefas';
+			
+			// Verifica se a tabela existe
+			if ($schemaManager->tablesExist([$tableName])) {
+				$schemaManager->dropTable($tableName);
+				$output->writeln("<comment>Tabela [$tableName] apagada com sucesso!</comment>");
+			}        
+
+			$schema = new Schema();
+			$table = $schema->createTable($tableName);			
+			$table->addOption('charset', $params['charset']);
+			$table->addOption('collate', $params['collation']);			
+			$table->addColumn('id', Types::SMALLINT, ['unsigned' => true, 'autoincrement' => true]);
+			$table->addColumn('tarefa', Types::STRING, ['length' => 250]);
+
+			$table->setPrimaryKey(['id']);
+
+			try {
+				// Obtém a instrução SQL para criar a tabela
+				$sql = $schema->toSql($conn->getDatabasePlatform());
+
+				// Executa a instrução SQL
+				foreach ($sql as $sqlStatement) {
+					$conn->executeStatement($sqlStatement);
+				}
+				
+				$conn->executeStatement("ALTER TABLE $tableName ADD COLUMN concluido ENUM('S', 'N') DEFAULT 'N'");
+
+				$output->writeln("<info>Tabela [$tableName] criada com sucesso!</info>");
+			} catch (SchemaException $e) {
+				$output->writeln('<error>Erro ao criar a tabela: ' . $e->getMessage() .'</error>');
+			}			
 			
 			// Ativa as verificações de chave estrangeira
 			$conn->executeStatement('SET FOREIGN_KEY_CHECKS=1');

@@ -14,6 +14,9 @@ use App\Controllers\UsuarioController;
 
 return function (App $app) {
 	$app->get('/', [HomeController::class, 'index'])->setName('home');
+	$app->post('/insert', [HomeController::class, 'insert']);
+	
+	$app->get('/principal', [HomeController::class, 'principal'])->setName('principal');
 	
 	$app->group('/usuarios', function ($group) {
 		$group->get('', [UsuarioController::class, 'index'])->setName('usuarios');

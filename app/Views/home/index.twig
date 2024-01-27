@@ -6,7 +6,131 @@
   <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-		conteudo
+
+<div class="container">
+	<div class="row">
+		<div class="col-lg-4 col-6">
+			<div class="small-box bg-olive">
+				<div class="inner">
+					<h3>{{ totais.generos }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-table"></i>
+				</div>
+				<a href="generos" class="small-box-footer">Generos</a>
+			</div>
+		</div>
+
+		<div class="col-lg-4 col-6">
+			<div class="small-box bg-purple">
+				<div class="inner">
+					<h3>{{ totais.animes }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<img src="dist/img/anime.png" width="90" style="margin-top:-20px;padding-right: 5px;"></img>
+				</div>
+				<a href="animes" class="small-box-footer">Animes</a>
+			</div>
+		</div>
+
+		<div class="col-lg-4 col-6">
+			<div class="small-box bg-yellow">
+				<div class="inner">
+					<h3>{{ totais.filmes }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-film"></i>
+				</div>
+				<a href="filmes" class="small-box-footer">Filmes</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-4 col-6">
+			<div class="small-box bg-red">
+				<div class="inner">
+					<h3>{{ totais.series }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-desktop"></i>
+				</div>
+				<a href="series" class="small-box-footer">Series</a>
+			</div>
+		</div>
+		
+		<div class="col-lg-4 col-6">
+			<div class="small-box bg-light-blue">
+				<div class="inner">
+					<h3>{{ totais.usuarios }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-user"></i>
+				</div>
+				<a href="usuarios" class="small-box-footer">Usuarios</a>
+			</div>
+		</div>		
+		
+		<div class="col-lg-4 col-xs-6">
+			<div class="small-box bg-green">
+				<div class="inner">
+					<h3>{{ totais.dubladores }}</h3>
+					<p>Registros</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-microphone"></i>
+				</div>
+				<a href="dubladores" class="small-box-footer">Dubladores</a>
+			</div>
+		</div>
+	</div>
+	<br>
+	
+	<div class="row">	
+		<div class="box box-primary">
+			<div class="box-header">
+				<i class="ion ion-clipboard"></i>
+				<h2 class="box-title">
+					<small class="label label-warning">
+						{{ totais.tarefas }}
+					</small>
+					Bugs para corrigir e melhorias
+				</h2>
+			</div>
+
+			<div class="box-body">
+				<form name="form">
+				<ul class="todo-list">
+					{% for tarefa in totais.tarefasDB %}
+					<li>
+						<input type="checkbox" id="{{ tarefa.id }}" class="check" style="cursor:pointer">
+						<span class="text">
+							<label for="{{ tarefa.id }}" style="cursor:pointer">
+								{{ tarefa.tarefa }}
+							</label>	
+						</span>
+						<div class="tools">
+							<i class="fa fa-edit" data-id="{{ tarefa.id }}"></i>
+							<i class="fa fa-trash-o" data-id="{{ tarefa.id }}"></i>
+						</div>
+					</li>
+					{% endfor %}					
+				</ul>
+				</form>
+			</div>
+
+			<div class="box-footer clearfix no-border">
+				<button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Adicionar pendencia</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 	</section>
     <!-- /.content -->
   </div>
