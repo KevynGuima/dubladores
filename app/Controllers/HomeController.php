@@ -84,4 +84,10 @@ class HomeController
 		$jsonResponse->getBody()->write(json_encode(['success' => true]));
 		return $jsonResponse;
 	}
+	
+	public function principal(Request $request, Response $response)
+	{		
+		$twig = Twig::fromRequest($request);        
+		return $twig->render($response, 'home/principal.twig');
+	}
 }
