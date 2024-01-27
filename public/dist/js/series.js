@@ -187,14 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		btn.addEventListener('click', handleClick);
 	});
 
-    let cells = document.querySelectorAll('.imagem-cell');
-    cells.forEach(function(cell) {
-        cell.addEventListener('click', function() {
-            let caminhoImagem = 'dist/images/' + this.getAttribute('data-imagem');
-            document.getElementById('modalImagem').src = caminhoImagem;
-            $('#imagemModal').modal('show');
-        });
-    });
+	let cells = document.querySelectorAll('.imagem-cell');
+	cells.forEach(function(cell) {
+			cell.addEventListener('click', function() {
+					let caminhoImagem = 'dist/images/' + this.getAttribute('data-imagem');
+					document.getElementById('modalImagem').src = caminhoImagem;
+					$('#imagemModal').modal('show');
+			});
+	});
 
 	const btnSubmit = document.querySelector('#form');
 	btnSubmit.addEventListener('submit', Submit);
