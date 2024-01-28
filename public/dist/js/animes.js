@@ -1,116 +1,102 @@
 
-const btnNovoClick = () => {
-	
-	const formulario = document.querySelector('#form');
+function handleClick(event) {
+	const btn  = event.currentTarget;
+	const form = document.querySelector('#form');
 		
-	formulario.reset();
-	
-	document.querySelector("input[type='file']").value = '';
-	
-	document.getElementById('id').value = '';
-	
-	formulario.action = 'animes/insert';
+	setTimeout(function() {
+		form.querySelector('#nome').focus();
+	}, 500);
+		
+	if (btn.classList.contains('novo')) {
+		form.reset();
+		form.action = 'animes/insert';
+		$('#select2').val(null).trigger('change');
+	} else if(btn.classList.contains('editar')) {
+		let nomeInput           = document.querySelector('input[name="nome"]');
+		let dataLancamentoInput = document.querySelector('input[name="data_lancamento"]');
+		let temporadaInput      = document.querySelector('input[name="temporadas"]');
+		let idInput             = document.querySelector('input[name="id"]');
 
-	const tituloElement = document.querySelector('#titulo');
-	if (tituloElement) {
-		tituloElement.textContent = 'Novo';
+		const tr              = btn.closest('tr');
+		const dataInfo        = tr.dataset.info;
+		const info            = JSON.parse(dataInfo);
+		const id              = info.anime.id;
+		const nome            = info.anime.nome;
+		const generos         = info.anime.genero_id;
+		const temporadas      = info.anime.temporadas;
+		const imagem          = info.anime.imagem;
+		const data_lancamento = info.anime.data_lancamento;
+
+		let idsArray = generos ? generos.split(',').map((id) => {
+			return id.trim();
+		}) : [];
+
+		$('#select2').val(null).trigger('change');
+
+		idsArray.forEach((id) => {
+			$('#select2').find('option[value="' + id + '"]').prop('selected', true);
+		});
+		$('#select2').trigger('change');
+		
+		form.action = 'animes/update';
+
+		idInput.value             = id;
+		nomeInput.value           = nome;
+		dataLancamentoInput.value = data_lancamento;
+		temporadaInput.value      = temporadas;
+	} else if (btn.classList.contains('deletar')) {
+		const tr       = btn.closest('tr');
+		const dataInfo = tr.dataset.info;
+		const info     = JSON.parse(dataInfo);
+		const id       = info.anime.id;
+
+		Swal.fire({
+		  title: 'Você tem certeza?',
+		  text: 'Você não poderá reverter essa ação!',
+		  icon: 'question',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  cancelButtonText: 'Cancelar',
+		  confirmButtonText: 'Sim, deletar!'
+		}).then((result) => {
+			if (result.isConfirmed) {		  
+				fetch('/animes/delete/' + id, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(response => {
+					if (response.status === 204) {
+						Swal.fire({
+						  position: 'top-end',
+						  icon: 'success',
+						  title: 'Deletado com sucesso!',
+						  showConfirmButton: false,
+						  timer: 1000
+						});
+
+						setTimeout(function() {
+							location.reload(true);
+						}, 1100);
+					} else {
+					  console.error('Erro ao apagar o registro. Código de resposta:', response.status);
+					  response.text().then(text => console.error('Conteúdo da resposta:', text));
+					}
+				})
+				.catch(error => {
+					console.error('Erro na requisição:', error);
+				});
+			}
+		});
+	}		
+
+	if(btn.classList.contains('novo') || btn.classList.contains('editar')) {
+		$('#modal').modal();
 	}
-	
-	//document.querySelector('#capa').src = 'dist/images/animes/capa.png';
-
-	$('#collapseFalecimento').collapse('hide');
-
-	$('#modal').modal();
 }
 
-const btnEditarClick = (event) => {
-	let nomeInput           = document.querySelector('input[name="nome"]');
-	let dataLancamentoInput = document.querySelector('input[name="dataLancamento"]');
-	let temporadasInput     = document.querySelector('input[name="temporadas"]');
-
-	const tr             = btn.closest('tr');
-	const dataInfo       = tr.dataset.info;
-	const info           = JSON.parse(dataInfo);
-	const id             = info.serie.id;		
-	const nome           = info.serie.nome;
-	const generos        = info.serie.genero_id;
-	const dataLancamento = info.serie.data_lancamento;
-	const temporadas     = info.serie.temporadas;
-
-	console.log(info.serie);
-
-	let idsArray = generos ? generos.split(',').map(function(id) {
-		return id.trim();
-	}) : [];
-
-	$('#select2').val(null).trigger('change');
-
-	idsArray.forEach(function(id) {
-		$('#select2').find('option[value="' + id + '"]').prop('selected', true);
-	});
-	$('#select2').trigger('change');
-
-	const idInput = document.createElement('input');
-	idInput.type = 'hidden';
-	idInput.name = 'id';
-	idInput.value = id;
-	form.appendChild(idInput);
-	form.action = 'series/update';
-
-	nomeInput.value           = nome;
-	dataLancamentoInput.value = dataLancamento;
-	temporadasInput.value     = temporadas;
-}
-
-const btnDeletarClick = (event) => {
-	const btn      = event.currentTarget;
-	tr             = btn.closest('tr');
-	const dataInfo = tr.dataset.info;
-	const info     = JSON.parse(dataInfo);
-	const id       = info.id;	
-	
-	Swal.fire({
-	  title: 'Você tem certeza?',
-	  text: 'Você não poderá reverter essa ação!',
-	  icon: 'question',
-	  showCancelButton: true,
-	  confirmButtonColor: '#3085d6',
-	  cancelButtonColor: '#d33',
-	  cancelButtonText: 'Cancelar',
-	  confirmButtonText: 'Sim, deletar!'
-	}).then((result) => {
-		if (result.isConfirmed) {		  
-			fetch('/animes/delete/' + id, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			}).then(response => {
-				if (response.status === 204) {
-					Swal.fire({
-					  position: 'top-end',
-					  icon: 'success',
-					  title: 'Deletado com sucesso!',
-					  showConfirmButton: false,
-					  timer: 1000
-					});
-
-					setTimeout(function() {
-						location.reload(true);
-					}, 1100);					
-				} else {
-				  console.error('Erro ao apagar o registro. Código de resposta:', response.status);
-				  response.text().then(text => console.error('Conteúdo da resposta:', text));
-				}
-			})
-			.catch(error => {
-				console.error('Erro na requisição:', error);
-			});
-		}
-	});
-}
-
-const Submit = (event) => {
+function Submit(event) {
 	event.preventDefault();
 	
 	let formData = new FormData(this);
@@ -120,37 +106,63 @@ const Submit = (event) => {
 		body: formData
 	};
 
-	fetch(this.action, requestOptions)
-		.then(response => {
-			if (response.status === 201) {
-				Swal.fire({
-				  position: 'top-end',
-				  icon: 'success',
-				  title: 'Criado com sucesso',
-				  showConfirmButton: false,
-				  timer: 1000
-				});
-			}
-			
-			if (response.status === 200) {
-				Swal.fire({
-				  position: 'top-end',
-				  icon: 'success',
-				  title: 'Editado com sucesso',
-				  showConfirmButton: false,
-				  timer: 1000
-				});
-			}			
-
-			setTimeout(function() {
+	axios.post(this.action, formData)
+	.then(response => {
+		if (response.status === 200) {
+			Swal.fire({
+				position: 'top-end',
+				icon: 'success',
+				title: 'Editado com sucesso!',
+				showConfirmButton: false,
+				timer: 1200,
+				timerProgressBar: true,
+				willClose: () => {
+					location.reload(true);
+				}
+			});
+		}
+		if (response.status === 201) {
+			Swal.fire({
+				position: 'top-end',
+				icon: 'success',
+				title: 'Criado com sucesso!',
+				showConfirmButton: false,
+				timer: 1200,
+				timerProgressBar: true,
+				willClose: () => {
+					location.reload(true);
+				}
+			});
+		} else {
+			console.log('Código de status inesperado:', response.status);
+			console.log(response);
+		}
+	})
+	.catch(error => {
+	    console.error('Erro na solicitação:', error.response.status);
+	    console.log(error);
+		
+		Swal.fire({
+			position: 'top-end',
+			icon: 'error',
+			title: 'Erro!',
+			showConfirmButton: false,
+			timer: 1200,
+			timerProgressBar: true,
+			willClose: () => {
 				location.reload(true);
-			}, 1100);
-	}).catch(error => {
-		console.error('Erro na requisição:', error);
-	});	
+			}
+		});		
+	});
+  
+	
+	//setTimeout(function() {
+		//location.reload(true);
+	//}, 1100);	
 }
 
 const Start = () => {
+	//$.fn.select2.defaults.set('theme', 'classic');
 
 	$.ajax({
 		url: 'generos/listar',
@@ -182,7 +194,7 @@ const Start = () => {
 		console.error('Erro ao carregar o JSON:', error);
 	});
 }
-
+// Inicio do Script
 document.addEventListener('DOMContentLoaded', () => {
 	Start();
 
@@ -195,14 +207,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		btn.addEventListener('click', handleClick);
 	});
 
-	let cells = document.querySelectorAll('.imagem-cell');
-	cells.forEach(function(cell) {
-			cell.addEventListener('click', function() {
-					let caminhoImagem = 'dist/images/' + this.getAttribute('data-imagem');
-					document.getElementById('modalImagem').src = caminhoImagem;
-					$('#imagemModal').modal('show');
-			});
-	});
+    let cells = document.querySelectorAll('.imagem-cell');
+    cells.forEach(function(cell) {
+        cell.addEventListener('click', function() {
+            let caminhoImagem = 'dist/images/' + this.getAttribute('data-imagem');
+            document.getElementById('modalImagem').src = caminhoImagem;
+            $('#imagemModal').modal('show');
+        });
+    });
 
 	const btnSubmit = document.querySelector('#form');
 	btnSubmit.addEventListener('submit', Submit);

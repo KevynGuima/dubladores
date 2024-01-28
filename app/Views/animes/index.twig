@@ -75,10 +75,16 @@
 			  </div>
 			  <div class="modal-body">
 				<form id="form" action="animes/salvar" method="post" autocomplete="off" enctype="multipart/form-data">
+					<input type="hidden" name="id" id="id" />
 					<div class="form-group">
 						<label for="nome">Nome:</label>
-						<input type="text" class="form-control" id="nome" name="nome" required autofocus>
+						<input type="text" class="form-control" id="nome" name="nome" minlength="4" required autofocus>
 					</div>
+					
+					<div class="form-group">
+						<label for="temporadas">Temporadas:</label>
+						<input type="number" class="form-control" id="temporadas" name="temporadas" required autofocus>
+					</div>					
     
 					<div class="form-group">
 					  <label for="generos">Gêneros:</label>
@@ -89,11 +95,12 @@
 					<div class="form-group">
 						<label for="imagem">Selecione uma imagem para upload:</label>
 						<input type="file" class="form-control" id="imagem" name="imagem" accept=".png, .jpg">
+						<img src="dist/img/retrato.png" id="retrato" alt="retrato" class="img-thumbnail" width="120px" height="146px">
 					</div>
 					
 					<div class="form-group">
-						<label for="dataLancamento">Data de Lançamento:</label>
-						<input type="date" class="form-control" id="dataLancamento" name="dataLancamento">
+						<label for="data_lancamento">Data de Lançamento:</label>
+						<input type="date" class="form-control" id="data_lancamento" name="data_lancamento" required>
 					</div>
 					<button type="submit" class="btn btn-primary">
 						<i class="fa fa-save"></i>

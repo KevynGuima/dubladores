@@ -15,7 +15,7 @@ class AnimeModel
 	{
 		$this->db     = $container->get('db');
 		$this->helper = $container->get('Helpers');
-  }	
+	}	
 
 	public function All()
 	{
@@ -44,33 +44,34 @@ class AnimeModel
 		}
 	}
 	
-    public function Insert(array $data, $nomeImagem) : bool
+    public function Insert(array $data, $nomeImagem)
     {
-		$nome           = $this->helper->MB_CASE_TITLE_BR($data['nome']);
-		$dataLancamento = $data['dataLancamento'];
-		$temporadas     = $data['temporadas'];
-	
-		$stmt = $this->db->prepare("INSERT INTO animes (nome, data_lancamento, imagem, temporadas) VALUES (:nome, :dataLancamento, :nomeImagem, :temporadas)");
-		$stmt->bindParam(':nome', $nome);
-		$stmt->bindParam(':dataLancamento', $dataLancamento);
-		$stmt->bindParam(':nomeImagem', $nomeImagem);
-		$stmt->bindParam(':temporadas', $temporadas);
-		$result = $stmt->execute();
+		$nome            = $this->helper->MB_CASE_TITLE_BR($data['nome']);
+		$data_lancamento = $data['data_lancamento'];
+		$temporadas      = $data['temporadas'];
+		
+		try {
+			$stmt = $this->db->prepare("INSERT INTO animes (nome, data_lancamento, imagem, temporadas) VALUES (:nome, :data_lancamento, :nomeImagem, :temporadas)");
+			$stmt->bindParam(':nome', $nome);
+			$stmt->bindParam(':data_lancamento', $data_lancamento);
+			$stmt->bindParam(':nomeImagem', $nomeImagem);
+			$stmt->bindParam(':temporadas', $temporadas);
 
-		$anime_id = $this->db->lastInsertId();
-		
-		if ($result) {
-			foreach ($data['generos'] as $genero_id) {
-				$stmt = $this->db->prepare("INSERT INTO anime_genero (anime_id, genero_id) VALUES (:anime_id, :genero_id)");
-				$stmt->bindParam(':anime_id', $anime_id);
-				$stmt->bindParam(':genero_id', $genero_id);
-				$stmt->execute();
+			$result = $stmt->execute();
+
+			if ($result) {
+				$anime_id = $this->db->lastInsertId();				
+
+				foreach ($data['generos'] as $genero_id) {
+					$stmt = $this->db->prepare("INSERT INTO anime_genero (anime_id, genero_id) VALUES (:anime_id, :genero_id)");
+					$stmt->bindParam(':anime_id', $anime_id);
+					$stmt->bindParam(':genero_id', $genero_id);
+					$stmt->execute();
+				}				
 			}
-			
-			return true;
-		}
-		
-		return false;
+		} catch (PDOException $e) {
+			throw $e;			
+		}		
 	}
 	
 	public function pegarNomeImagem($id) 
@@ -86,46 +87,52 @@ class AnimeModel
 		return $imagem;	
 	}
 	
-    public function Update($data) : bool
+    public function Update($data)
     {
 		$anime_id        = $data['id'];
 		$nome            = $this->helper->MB_CASE_TITLE_BR($data['nome']);
-		$data_lancamento = $data['dataLancamento'];
+		$data_lancamento = $data['data_lancamento'];
 		$generos         = $data['generos'];
+		$temporadas      = $data['temporadas'];
 		$imagem          = $data['imagem'];
 
-		$queryBuilder = $this->db->createQueryBuilder();
+		try {
+			$queryBuilder = $this->db->createQueryBuilder();
 
-		$queryBuilder
-		  ->update('animes', 's')
-		  ->set('s.nome', ':nome')
-		  ->set('s.data_lancamento', ':data_lancamento')
-		  ->where('s.id = :id')
-		  ->setParameter('nome', $nome)
-		  ->setParameter('data_lancamento', $data_lancamento)
-		  ->setParameter('id', $anime_id, \PDO::PARAM_INT);
-		  
-		if (!empty($imagem)) {
-			$queryBuilder->set('imagem', ':imagem')->setParameter('imagem', $imagem);
-		}
-		$queryBuilder->execute();		
-
-		$queryBuilder
-			->delete('anime_genero')
-			->where('anime_id = :id')
-			->setParameter('id', $anime_id, \PDO::PARAM_INT)
-			->execute();
-		
-		foreach ($generos as $genero_id) {
 			$queryBuilder
-				->insert('anime_genero')
-				->values(['anime_id' => ':anime_id', 'genero_id' => ':genero_id'])
-				->setParameter('anime_id', $anime_id)
-				->setParameter('genero_id', $genero_id)
-				->execute();		
-		}
+			  ->update('animes', 's')
+			  ->set('s.nome', ':nome')
+			  ->set('s.data_lancamento', ':data_lancamento')
+			  ->set('s.temporadas', ':temporadas')
+			  ->where('s.id = :id')
+			  ->setParameter('nome', $nome)
+			  ->setParameter('data_lancamento', $data_lancamento)
+			  ->setParameter('temporadas', $temporadas)
+			  ->setParameter('id', $anime_id, \PDO::PARAM_INT);
+			  
+			if (!empty($imagem)) {
+				$queryBuilder->set('imagem', ':imagem')->setParameter('imagem', $imagem);
+			}
+			$queryBuilder->execute();		
+
+			$queryBuilder
+				->delete('anime_genero')
+				->where('anime_id = :id')
+				->setParameter('id', $anime_id, \PDO::PARAM_INT)
+				->execute();
 			
-		return true;
+			foreach ($generos as $genero_id) {
+				$queryBuilder
+					->insert('anime_genero')
+					->values(['anime_id' => ':anime_id', 'genero_id' => ':genero_id'])
+					->setParameter('anime_id', $anime_id)
+					->setParameter('genero_id', $genero_id)
+					->execute();		
+			}
+			
+		} catch (PDOException $e) {
+			throw $e;			
+		}
 	}	
 	
 	public function Delete($id)

@@ -73,9 +73,10 @@
 						</div>
 						<div class="modal-body">
 							<form id="form" action="filmes/salvar" method="post" autocomplete="off" enctype="multipart/form-data">
+								<input type="hidden" name="id" id="id" />
 								<div class="form-group">
 									<label for="nome">Nome:</label>
-									<input type="text" class="form-control" id="nome" name="nome" required autofocus>
+									<input type="text" class="form-control" id="nome" name="nome"  minlength="4" required autofocus>
 								</div>
 
 								<div class="form-group">
@@ -85,8 +86,8 @@
 								</div>
 
 								<div class="form-group">
-									<label for="dataLancamento">Data de Lançamento:</label>
-									<input type="date" class="form-control" id="dataLancamento" name="dataLancamento">
+									<label for="data_lancamento">Data de Lançamento:</label>
+									<input type="date" class="form-control" id="data_lancamento" name="data_lancamento" required>
 								</div>
 
 								<div class="form-group">

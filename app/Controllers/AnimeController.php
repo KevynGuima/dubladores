@@ -47,11 +47,11 @@ class AnimeController
 		return $filename;
 	}
 
-	function salvaranime($nome, $dataLancamento, $nomeImagem)
+	function salvaranime($nome, $data_lancamento, $nomeImagem)
 	{
-		$stmt = $db->prepare("INSERT INTO animes (nome, data_lancamento, nome_imagem, temporadas) VALUES (:nome, :dataLancamento, :nomeImagem, :temporadas)");
+		$stmt = $db->prepare("INSERT INTO animes (nome, data_lancamento, nome_imagem, temporadas) VALUES (:nome, :data_lancamento, :nomeImagem, :temporadas)");
 		$stmt->bindParam(':nome', $nome);
-		$stmt->bindParam(':dataLancamento', $dataLancamento);
+		$stmt->bindParam(':data_lancamento', $data_lancamento);
 		$stmt->bindParam(':nomeImagem', $nomeImagem);
 		$stmt->bindParam(':temporadas', $temporadas);
 		$stmt->execute();
@@ -67,13 +67,14 @@ class AnimeController
         $uploadedFiles = $request->getUploadedFiles();
         $imagem        = $uploadedFiles['imagem'];		
         $nome          = $data['nome'];	
-        $nomeImagem = '';
+        $nomeImagem    = '';
+
         if ($imagem->getError() === UPLOAD_ERR_OK) {
             $nomeImagem     = $imagem->getClientFilename();
             $info           = pathinfo($nomeImagem);
             $extensao       = $info['extension'];
             $imagemTemp     = $imagem->getStream()->getMetadata('uri');
-            $caminhoDestino = 'dist/images/' . $nome .'.'. $extensao;
+            $caminhoDestino = 'dist/images/animes/' . $nome .'.'. $extensao;
 
             $imagem = Image::make($imagemTemp);
             $imagem->resize(500, null, function ($constraint) {
@@ -82,12 +83,18 @@ class AnimeController
             $imagem->save($caminhoDestino);	
         }
         
-        $result = $this->animes->Insert($data, $nomeImagem);
+		try {
+			$result = $this->animes->Insert($data, $nomeImagem);
 
-        $jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(201);
-        $jsonResponse->getBody()->write(json_encode(['success' => true, 'message' => 'Salvo com sucesso!']));
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+			$jsonResponse->getBody()->write(json_encode(['message' => 'Salvo com sucesso!']));
 
-        return $jsonResponse;	
+			return $jsonResponse;
+		} catch (PDOException $e) {
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+			$jsonResponse->getBody()->write(json_encode(['message' => $e->getMessage()]));
+			return 	$jsonResponse;
+		}	
     }
 
     public function update(Request $request, Response $response)
@@ -100,7 +107,7 @@ class AnimeController
         if ($imagem->getError() === UPLOAD_ERR_OK) {
             $nomeImagemAntiga = $this->animes->pegarNomeImagem($data['id']);
             if($nomeImagemAntiga) {
-                $caminhoImagem = 'dist/images/'.$nomeImagemAntiga;
+                $caminhoImagem = 'dist/images/animes/'.$nomeImagemAntiga;
                 if (file_exists($caminhoImagem)) {
                     unlink($caminhoImagem);
                 }
@@ -110,7 +117,7 @@ class AnimeController
             $imagemTemp     = $imagem->getStream()->getMetadata('uri');
             $info           = pathinfo($nomeImagem);
             $extensao       = $info['extension'];
-            $caminhoDestino = 'dist/images/' . $nome .'.'. $extensao;
+            $caminhoDestino = 'dist/images/animes' . $nome .'.'. $extensao;
 
             $imagem = Image::make($imagemTemp);
             $imagem->resize(500, null, function ($constraint) {
@@ -120,13 +127,19 @@ class AnimeController
         }
         
         $data['imagem'] = $nomeImagem;
-        
-        $result = $this->animes->Update($data);
 
-        $jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-        $jsonResponse->getBody()->write(json_encode(['success' => true, 'message' => 'Editado com sucesso!']));
+		try {
+			$result = $this->animes->Update($data);
 
-        return $jsonResponse;
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+			$jsonResponse->getBody()->write(json_encode(['message' => 'Salvo com sucesso!']));
+
+			return $jsonResponse;
+		} catch (PDOException $e) {
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+			$jsonResponse->getBody()->write(json_encode(['message' => $e->getMessage()]));
+			return 	$jsonResponse;
+		}
     }
 
     public function delete(Request $request, Response $response, $args)

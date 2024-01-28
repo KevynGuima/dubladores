@@ -110,8 +110,7 @@ function Deletar(event) {
 			  })
 			  .catch(error => {
 				console.error('Error na requisição:', error.message);
-			  });
-  
+			});  
 		}
 	});
 }
