@@ -285,8 +285,8 @@ class Table extends Command
 			$table->addOption('collate', $params['collation']);			
 			$table->addColumn('filme_id', Types::SMALLINT, ['unsigned' => true]);
 			$table->addColumn('genero_id', Types::SMALLINT, ['unsigned' => true]);			
-			$table->addForeignKeyConstraint('filmes', ['filme_id'], ['id'], ['onDelete' => 'CASCADE']);
-			$table->addForeignKeyConstraint('generos', ['genero_id'], ['id'], ['onDelete' => 'CASCADE']);
+			$table->addForeignKeyConstraint('filmes', ['filme_id'], ['id'], ['onDelete' => 'RESTRICT']);
+			$table->addForeignKeyConstraint('generos', ['genero_id'], ['id'], ['onDelete' => 'RESTRICT']);
 			$table->setPrimaryKey(['filme_id', 'genero_id']);
 
 			try {

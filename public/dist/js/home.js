@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let currentUrl = window.location.href;
 
 	// Seleciona todos os links no menu
-	let menuLinks = document.querySelectorAll('ul.treeview-menu li a');
+	let menuLinks = document.querySelectorAll('ul.sidebar-menu li a');
 
 	// Itera sobre os links e verifica se a URL corresponde
 	for (let i = 0; i < menuLinks.length; i++) {
@@ -13,18 +13,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (currentUrl.endsWith(link.getAttribute('href'))) {
 			// Adiciona a classe "active" ao link correspondente
 			link.parentNode.classList.add('active');
+			link.parentNode.classList.add('treeview');
 			
 			// Adiciona a classe "menu-open" ao avô (treeview) correspondente
-			let treeview = findAncestor(link.parentNode, 'treeview');
-			if (treeview) {
-				treeview.classList.add('menu-open');
+			//let treeview = findAncestor(link.parentNode, 'treeview');
+			//if (treeview) {
+				//treeview.classList.add('menu-open');
 				
 				// Adiciona o estilo display: block; à tag <ul class="treeview-menu">
-				let treeviewMenu = treeview.querySelector('.treeview-menu');
-				if (treeviewMenu) {
-					treeviewMenu.style.display = 'block';
-				}
-			}
+				//let treeviewMenu = treeview.querySelector('.treeview-menu');
+				//if (treeviewMenu) {
+					//treeviewMenu.style.display = 'block';
+				//}
+			//}
 		}
 	}
 	

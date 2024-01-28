@@ -13,6 +13,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\ORMException;
 use Doctrine\DBAL\Exception as DBALException;
 use Respect\Validation\Exceptions\ValidationException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class GeneroController
 {
@@ -75,7 +76,7 @@ class GeneroController
 		} catch (UniqueConstraintViolationException $e) {
 			//echo $e->getMessage();
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
-			$jsonResponse->getBody()->write(json_encode(['message' => 'Essa genero ja existe', 'success' => false]));
+			$jsonResponse->getBody()->write(json_encode(['message' => 'Essa gênero já existe', 'success' => false]));
 			return $jsonResponse;
 		} catch (DBALException $e) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -160,12 +161,20 @@ class GeneroController
         if (!$this->generos->Find($id)) {
 			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			$jsonResponse->getBody()->write(json_encode(['message' => 'Genero não encontrado', 'success' => false]));
-
 			return $jsonResponse;
         }
 
-		if($this->generos->Delete($id)) {
+		try {
+			$this->generos->Delete($id);
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(204);
-		}
+		 } catch (ForeignKeyConstraintViolationException $e) {
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			$jsonResponse->getBody()->write(json_encode(['message' => 'Não é possível apagar esse gênero']));
+			return $jsonResponse;
+        } catch (\Exception $e) {
+			$jsonResponse = $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			$jsonResponse->getBody()->write(json_encode(['message' => 'Ocorreu um erro inesperado.']));
+			return $jsonResponse;
+        }		
     }
 }

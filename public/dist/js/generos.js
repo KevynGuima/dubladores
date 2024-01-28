@@ -73,31 +73,45 @@ function Deletar(event) {
 	  confirmButtonText: "Sim, deletar!"
 	}).then((result) => {
 		if (result.isConfirmed) {
+			
 			fetch(url, requestOptions)
 			  .then(response => {
-				if (response.status === 204) {
-					Swal.fire({
-						position: 'top-end',
-						icon: 'success',
-						title: 'Deletado com sucesso!',
-						showConfirmButton: false,
-						timer: 1200,
-						timerProgressBar: true,
-						willClose: () => {
-							location.reload(true);
-						}
+				if (!response.ok) {
+					return response.json().then(errorData => {
+						Swal.fire({
+							icon: 'error',
+							title: errorData.message,
+							showConfirmButton: false,
+							timerProgressBar: true,
+							timer: 2000
+						});			
+						throw new Error(errorData.message);
 					});
+				} else {
+				  if(response.status === 204) {
+						Swal.fire({
+							position: 'top-end',
+							icon: 'success',
+							title: 'Deletado com sucesso!',
+							showConfirmButton: false,
+							timer: 1200,
+							timerProgressBar: true,
+							willClose: () => {
+								location.reload(true);
+							}
+						});
+					}
 				}
-			})
-			.catch(error => {
-				Swal.fire({
-					icon: 'error',
-					title: error,
-					showConfirmButton: false,
-					timerProgressBar: true,
-					timer: 2000
-				});
-			});
+
+				return response.json();
+			  })
+			  .then(data => {
+					console.log(data);		
+			  })
+			  .catch(error => {
+				console.error('Error na requisição:', error.message);
+			  });
+  
 		}
 	});
 }

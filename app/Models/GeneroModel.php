@@ -5,6 +5,9 @@ namespace App\Models;
 
 use DI\Container;
 use App\Helpers;
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 
 class GeneroModel
 {
@@ -79,13 +82,21 @@ class GeneroModel
 	
 	public function Delete($id)
 	{
-		$rowCount = $this->db->executeStatement('DELETE FROM generos WHERE id = ?', [$id]);
+		try {
+			$rowCount = $this->db->executeStatement('DELETE FROM generos WHERE id = ?', [$id]);
 
-		if ($rowCount > 0) {
-			return true;
-		}
-
-		return false;
+			if ($rowCount > 0) {
+				return true;
+			}
+		} catch (ForeignKeyConstraintViolationException $e) {
+            // Captura e trata a exceção ForeignKeyConstraintViolationException
+			throw $e;
+            //return new Response('Não foi possível realizar a operação devido a restrições de chave estrangeira.');
+        } catch (\Exception $e) {
+            // Captura outras exceções (caso necessário)
+			throw $e;
+            //return new Response('Ocorreu um erro inesperado.');
+        }
 	}
 	
 	public function Find($id)
